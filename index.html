@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --pink: #ff4d6d;
+            --dark-pink: #c9184a;
+            --bg-color: #fff0f3;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Music Control Button */
+        #mute-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--pink);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        /* Raining Hearts */
+        .heart-drop {
+            position: fixed;
+            top: -10%;
+            font-size: 20px;
+            user-select: none;
+            z-index: -1;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Card Container */
+        .card {
+            position: relative;
+            width: 350px;
+            height: 500px;
+            cursor: pointer;
+            perspective: 1200px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+
+        .card.open { transform: translateX(50%); }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: left;
+        }
+
+        .card.open .card-inner { transform: rotateY(-180deg); }
+
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-sizing: border-box;
+        }
+
+        .front {
+            background-color: var(--pink);
+            color: white;
+            z-index: 2;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .front h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            text-align: center;
+        }
+
+        .front p { font-style: italic; font-size: 1rem; opacity: 0.9; }
+
+        .inside-left {
+            background-color: #fff;
+            transform: rotateY(180deg);
+            overflow: hidden;
+        }
+
+        .inside-left img { width: 100%; height: 100%; object-fit: cover; }
+
+        .inside-right {
+            background-color: #fff;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            border: 2px solid var(--pink);
+            padding: 30px 20px;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .wish-text {
+            font-size: 1rem;
+            color: #444;
+            line-height: 1.5;
+            text-align: center;
+            margin-top: 10px;
+            white-space: pre-line;
+        }
+
+        .heart { color: var(--pink); font-size: 2.5rem; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="player" style="display:none"></div>
+
+    <button id="mute-btn" title="Toggle Music">🎵</button>
+
+    <div class="card" id="valentineCard">
+        <div class="card-inner">
+            <div class="face front">
+                <h1>Happy Valentine Day sayang!</h1>
+                <p>please open ↓</p>
+            </div>
+
+            <div class="face inside-left">
+                <img src="https://i.imgur.com/4hc4kHC.jpg" alt="Our Picture">
+            </div>
+        </div>
+
+        <div class="face inside-right">
+            <div class="heart">❤️</div>
+            <p class="wish-text">
+                HAPPY VALENTINE DAY SAYANGGGG!!!!! 
+
+                thank you sebab always ada dengan i hehehe. tahun ni dah nak masuk tahun ke-4 kita together gether. 
+
+                sayang adalah insan yang sangat bermakna dalam hidup i. i tak sabar nak hidup bersama sama dengan u sampai hujung nyawa i.
+
+                memory paling best sekali kita do it together ialah time kita kat Arau sayang. semua tempat date kita pergi paling best untuk i hehe.
+
+                and dont forget that you are the best thing that ever happened to me. 
+
+                ikhlas dari i, 
+                your cute baby hehe :3
+
+                I LOVE YOU SO MUCH SAYANG ❤️❤️❤️
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 1. YouTube IFrame API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        var isMuted = false;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: 'v9S_V-M_wX4', 
+                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'v9S_V-M_wX4' },
+                events: { 'onReady': onPlayerReady }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Player is ready
+        }
+
+        // 2. Card Logic + Music Start
+        const card = document.getElementById('valentineCard');
+        let musicStarted = false;
+
+        card.addEventListener('click', () => {
+            card.classList.toggle('open');
+            if (!musicStarted && player) {
+                player.playVideo();
+                musicStarted = true;
+            }
+        });
+
+        // 3. Mute Toggle
+        const muteBtn = document.getElementById('mute-btn');
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Don't flip the card when clicking mute
+            if (player) {
+                if (isMuted) {
+                    player.unMute();
+                    muteBtn.innerText = "🎵";
+                } else {
+                    player.mute();
+                    muteBtn.innerText = "🔇";
+                }
+                isMuted = !isMuted;
+            }
+        });
+
+        // 4. Raining Hearts Logic
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-drop');
+            const heartTypes = ['❤️', '💖', '💗', '💕', '💘'];
+            heart.innerText = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+            heart.style.left = Math.random() * 100 + "vw";
+            const duration = Math.random() * 4 + 3;
+            heart.style.animationDuration = duration + "s";
+            heart.style.fontSize = Math.random() * 20 + 10 + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, duration * 1000);
+        }
+        setInterval(createHeart, 300);
+    </script>
+
+</body>
+</html>
