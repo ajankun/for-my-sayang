@@ -43,6 +43,7 @@
             justify-content: center;
             align-items: center;
             font-size: 20px;
+            opacity: 0.8;
         }
 
         /* Raining Hearts */
@@ -150,9 +151,11 @@
 </head>
 <body>
 
-    <div id="player" style="display:none"></div>
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
 
-    <button id="mute-btn" title="Toggle Music">🎵</button>
+    <button id="mute-btn">🎵</button>
 
     <div class="card" id="valentineCard">
         <div class="card-inner">
@@ -188,57 +191,33 @@
     </div>
 
     <script>
-        // 1. YouTube IFrame API
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player;
-        var isMuted = false;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                videoId: 'v9S_V-M_wX4', 
-                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'v9S_V-M_wX4' },
-                events: { 'onReady': onPlayerReady }
-            });
-        }
-
-        function onPlayerReady(event) {
-            // Player is ready
-        }
-
-        // 2. Card Logic + Music Start
         const card = document.getElementById('valentineCard');
+        const song = document.getElementById('bgMusic');
+        const muteBtn = document.getElementById('mute-btn');
         let musicStarted = false;
 
+        // 1. Card Flip + Play Music
         card.addEventListener('click', () => {
             card.classList.toggle('open');
-            if (!musicStarted && player) {
-                player.playVideo();
+            if (!musicStarted) {
+                song.play();
                 musicStarted = true;
             }
         });
 
-        // 3. Mute Toggle
-        const muteBtn = document.getElementById('mute-btn');
+        // 2. Mute/Unmute Logic
         muteBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Don't flip the card when clicking mute
-            if (player) {
-                if (isMuted) {
-                    player.unMute();
-                    muteBtn.innerText = "🎵";
-                } else {
-                    player.mute();
-                    muteBtn.innerText = "🔇";
-                }
-                isMuted = !isMuted;
+            e.stopPropagation(); 
+            if (song.paused) {
+                song.play();
+                muteBtn.innerText = "🎵";
+            } else {
+                song.pause();
+                muteBtn.innerText = "🔇";
             }
         });
 
-        // 4. Raining Hearts Logic
+        // 3. Raining Hearts Logic
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart-drop');
